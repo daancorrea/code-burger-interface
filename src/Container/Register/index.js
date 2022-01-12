@@ -6,14 +6,13 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 
 import Logo from "../../assets/logo-img.svg";
-import LoginImg from "../../assets/login-img.svg";
+import RegisterImg from "../../assets/register-img.svg";
 
 import Button from "../../components/Button";
-import { useUser } from "../../hooks/UserContext";
 
 import {
   Container,
-  LoginImage,
+  RegisterImage,
   ContainerItems,
   Label,
   Input,
@@ -22,6 +21,9 @@ import {
 } from "./styles";
 
 const schema = yup.object({
+  name: yup
+    .string("O seu nome é obrigatório")
+    .required("Campo de nome é obrigatório."),
   email: yup
     .string()
     .email("Digite um e-mail válido.")
@@ -30,9 +32,13 @@ const schema = yup.object({
     .string()
     .required("Campo de senha obrigatório.")
     .min(6, "Senha deve conter pelo menos 6 dígitos."),
+  confirmPassword: yup
+    .string()
+    .required("Campo de senha obrigatório.")
+    .oneOf([yup.ref("password")], "As senhas devem ser iguais."),
 });
 
-export default function Login() {
+export default function Register() {
   const {
     register,
     handleSubmit,
@@ -40,29 +46,40 @@ export default function Login() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const { pushUserData, userData } = useUser();
+
   const onSubmit = async (clientData) => {
-    const { data } = await toast.promise(
-      api.post("session", {
-        email: clientData.email,
-        password: clientData.password,
-      }),
-      {
-        pending: "Verificando seus dados.",
-        success: "Seja bem-vindo(a).",
-        error: "Verifique seu e-mail e senha.",
+    try {
+      const { status } = await api.post(
+        "users",
+        {
+          email: clientData.email,
+          password: clientData.password,
+          name: clientData.name,
+        },
+        { validateStatus: () => true }
+      );
+
+      if (status === 201 || status === 200) {
+        toast.success("Conta criada com sucesso.");
+      } else if (status === 409) {
+        toast.error("Usuário já existente.");
+      } else {
+        throw new Error();
       }
-    );
-    pushUserData(data);
-    console.log(userData);
+    } catch (error) {
+      toast.error("Falha na conexão com servidor. Tente novamente mais tarde.");
+    }
   };
 
   return (
     <Container>
-      <LoginImage src={LoginImg} alt="login-img" />
+      <RegisterImage src={RegisterImg} alt="login-img" />
       <ContainerItems onSubmit={handleSubmit(onSubmit)} noValidate>
         <img src={Logo} alt="login-img" />
-        <h1>Login</h1>
+        <h1>Cadastre-se</h1>
+        <Label>Nome</Label>
+        <Input type="text" {...register("name")} error={errors.name?.message} />
+        <ErrorText>{errors.name?.message}</ErrorText>
 
         <Label>Email</Label>
         <Input
@@ -79,13 +96,20 @@ export default function Login() {
           error={errors.password?.message}
         />
         <ErrorText>{errors.password?.message}</ErrorText>
+        <Label>Confirmar Senha</Label>
+        <Input
+          type="password"
+          {...register("confirmPassword")}
+          error={errors.confirmPassword?.message}
+        />
+        <ErrorText>{errors.confirmPassword?.message}</ErrorText>
 
-        <Button type="submit" style={{ margin: "30px 0 28px 0" }}>
-          Sign In
+        <Button type="submit" style={{ margin: "10px 0 28px 0" }}>
+          Sign Up
         </Button>
 
         <NotAccountText>
-          Não possui conta? <a href="">Signup</a>
+          Já possui conta ? <a href="">Sign In</a>
         </NotAccountText>
       </ContainerItems>
     </Container>

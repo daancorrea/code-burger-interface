@@ -10,14 +10,14 @@ export const Container = styled.div`
   align-items: center;
 `;
 
-export const LoginImage = styled.img`
-  height: 70%;
+export const RegisterImage = styled.img`
+  height: 90%;
 `;
 
 export const ContainerItems = styled.form`
   background: #373737;
   border-radius: 0 10px 10px 0;
-  height: 70%;
+  height: 90%;
   padding: 1.56rem 4.7rem;
   display: flex;
   flex-direction: column;
