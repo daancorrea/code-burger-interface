@@ -20,7 +20,6 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "preinstall": "apt-get update && apt-get install -y libssl-dev",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
