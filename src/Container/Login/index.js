@@ -62,7 +62,7 @@ export default function Login() {
       <LoginImage src={LoginImg} alt="login-img" />
       <ContainerItems onSubmit={handleSubmit(onSubmit)} noValidate>
         <img src={Logo} alt="login-img" />
-        <h1>Login</h1>
+        <h1>Entre com a sua conta</h1>
 
         <Label>Email</Label>
         <Input
