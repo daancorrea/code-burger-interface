@@ -20,7 +20,7 @@ export function Products({ location: { state } }) {
     categoryId = state.categoryId
   }
 
-  const [ categories, setCategories ] = useState([])
+  const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [activeCategory, setActiveCategory] = useState(categoryId)
