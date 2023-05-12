@@ -55,6 +55,7 @@ function Orders() {
       )
       setFilteredOrders(newFilteredOrders)
     }
+    // eslint-disable-next-line
   }, [orders])
 
   function handleStatus(status) {
